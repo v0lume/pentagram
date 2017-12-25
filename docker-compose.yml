@@ -1,0 +1,68 @@
+version: '3'
+services:
+  api:
+    image: node:latest
+    command: bash -c "yarn && yarn start"
+    environment:
+      - NODE_ENV=development
+      - VIRTUAL_HOST=api.ng.pentagram
+    expose:
+      - "3000"
+    links:
+      - redis
+      - mongo
+    working_dir: /usr/src/app/server
+    volumes:
+      - ./server:/usr/src/app/server
+      - log_volume:/usr/src/app/server/logs
+
+  web:
+    image: node:latest
+    command: bash -c "yarn && yarn start"
+    environment:
+      - NODE_ENV=development
+      - VIRTUAL_HOST=ng.pentagram
+    expose:
+      - "4200"
+    working_dir: /usr/src/app/client
+    volumes:
+      - ./client:/usr/src/app/client
+
+  redis:
+    image: bitnami/redis:latest
+    ports:
+      - "5000:6379"
+    environment:
+      - REDIS_PASSWORD=root
+    volumes:
+      - redis_volume:/bitnami
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "5001:27017"
+    volumes:
+      - mongo_volume:/data/db
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    labels:
+        com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy: "true"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+#  nginx-static:
+#    image: nginx:latest
+#    container_name: nginx-static
+#    environment:
+#      - VIRTUAL_HOST=ng.pentagram
+#    volumes:
+#      - ./static-files/:/usr/share/nginx/html
+
+volumes:
+  mongo_volume: {}
+  redis_volume: {}
+  log_volume: {}

@@ -17,9 +17,9 @@ const port: number = +process.env.PORT || 3000;
 //app.use(cors);
 app.use(bodyParser.json());
 app.use(passport.initialize());
-app.use(routes.base);
+//app.use(routes.base);
 app.use(subdomain('api', routes.api));
 
-server.listen(port, '127.0.0.1', () => console.log('server started'));
+server.listen(port, '0.0.0.0', () => console.log('server started'));
 //server.on('request', (req, res) => console.log(req.subdomains));
 server.on('error', error => console.error(error));
