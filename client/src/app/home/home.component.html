@@ -1,3 +1,14 @@
-<p>
-  home works!
-</p>
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col text-right">
+      <span class="fa-stack fa-5x text-danger">
+        <i class="fa fa-circle-thin fa-stack-2x"></i>
+        <i class="fa fa-star-o fa-stack-2x fa-rotate-180"></i>
+      </span>
+    </div>
+    <div class="col">
+      <signup *ngIf="displaySignup" [(displaySignup)]="displaySignup"></signup>
+      <login *ngIf="!displaySignup" [(displaySignup)]="displaySignup"></login>
+    </div>
+  </div>
+</div>
